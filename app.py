@@ -47,9 +47,15 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    INVITE_CODE = "BETA2026"  # change this to your secret code
+
     if request.method == "POST":
         username = request.form["username"]
         password = generate_password_hash(request.form["password"])
+        invite_code = request.form.get("invite_code", "")
+
+        if invite_code != INVITE_CODE:
+            return "Invalid invite code. Contact admin for access."
 
         db = get_db()
         try:
@@ -57,7 +63,7 @@ def register():
             db.commit()
             return redirect("/")
         except:
-            return "Username already exists. Go back and try a different one."
+            return "Username already exists. Try a different one."
 
     return render_template("register.html")
 
@@ -168,4 +174,5 @@ def logout():
 
 if __name__ == "__main__":
     init_db()
+
     app.run()
