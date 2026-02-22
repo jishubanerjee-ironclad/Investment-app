@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/static/style.css">
+<div class="container">
+  <div class="header">
+    <h2>My Portfolio</h2>
+    <a class="badge" href="/logout">Logout</a>
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="small">Invested</div><h3>₹ {{ '%.2f'|format(invested) }}</h3></div>
+    <div class="card"><div class="small">Current Value</div><h3>₹ {{ '%.2f'|format(total_value) }}</h3></div>
+    <div class="card"><div class="small">P&L</div>
+      <h3 class="{{ 'pos' if total_pnl>=0 else 'neg' }}">₹ {{ '%.2f'|format(total_pnl) }}</h3>
+    </div>
+    <div class="card">
+      <form method="post" class="vstack">
+        <input name="stock" placeholder="NSE Ticker (e.g. TCS)" required>
+        <input name="qty" placeholder="Qty" required>
+        <input name="price" placeholder="Buy Price" required>
+        <input type="date" name="date" required>
+        <button class="primary">Add Holding</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <tr>
+        <th>Stock</th><th>Qty</th><th>Buy</th><th>Live</th><th>Value</th><th>P&L</th>
+      </tr>
+      {% for it in items %}
+      <tr>
+        <td>{{it.stock}}</td>
+        <td>{{it.qty}}</td>
+        <td>₹ {{it.price}}</td>
+        <td>₹ {{ it.live if it.live else "—" }}</td>
+        <td>₹ {{ '%.2f'|format(it.value) }}</td>
+        <td class="{{ 'pos' if it.pnl>=0 else 'neg' }}">₹ {{ '%.2f'|format(it.pnl) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>

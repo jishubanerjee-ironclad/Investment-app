@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/static/style.css">
+<div class="box" style="width: 90%;">
+  <h2>Admin Dashboard – All Client Portfolios</h2>
+
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Stock</th>
+      <th>Qty</th>
+      <th>Buy Price</th>
+      <th>Date</th>
+    </tr>
+    {% for d in data %}
+    <tr>
+      <td>{{d.username}}</td>
+      <td>{{d.stock}}</td>
+      <td>{{d.qty}}</td>
+      <td>{{d.price}}</td>
+      <td>{{d.date}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <br>
+  <a href="/logout">Logout</a>
+</div>

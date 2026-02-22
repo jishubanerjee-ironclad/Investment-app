@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container">
+  <div class="header">
+    <h2>Admin – Client Portfolios</h2>
+    <span class="badge">World-Class Fintech View</span>
+    <a class="badge" href="/logout">Logout</a>
+  </div>
+
+  {% for c in clients %}
+  <div class="card">
+    <div class="header">
+      <div>
+        <h3>{{c.user}}</h3>
+        <div class="small">Client Portfolio Overview</div>
+      </div>
+      <div class="hstack">
+        <div class="badge">AUM ₹ {{ '%.2f'|format(c.total_value) }}</div>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="grid">
+      <div class="card">
+        <div class="small">Total Value</div>
+        <h3>₹ {{ '%.2f'|format(c.total_value) }}</h3>
+      </div>
+      <div class="card">
+        <div class="small">No. of Stocks</div>
+        <h3>{{ c["items"]|length }}</h3>
+      </div>
+      <div class="card">
+        <div class="small">Top Holding</div>
+        <h3>{{ c["items"][0].stock if c["items"]|length else "—" }}</h3>
+      </div>
+      <div class="card">
+        <div class="small">Diversification</div>
+        <h3>{{ (c["items"]|length) * 10 }}%</h3>
+      </div>
+      <div class="card">
+  <div class="small">Invested</div>
+  <h3>₹ {{ '%.2f'|format(c.invested) }}</h3>
+</div>
+
+<div class="card">
+  <div class="small">P&L</div>
+  <h3 class="{{ 'pos' if c.pnl>=0 else 'neg' }}">
+    ₹ {{ '%.2f'|format(c.pnl) }}
+  </h3>
+</div>
+    </div>
+
+    <!-- Allocation Chart -->
+    <div class="card">
+      <canvas id="chart-{{ loop.index }}"></canvas>
+    </div>
+
+    <!-- Holdings Table -->
+    <div class="card">
+      <table>
+        <tr>
+          <th>Stock</th>
+          <th>Qty</th>
+          <th>Live</th>
+          <th>Value</th>
+          <th>Allocation %</th>
+        </tr>
+        {% for it in c["items"] %}
+        <tr>
+          <td>{{it.stock}}</td>
+          <td>{{it.qty}}</td>
+          <td>₹ {{ it.live if it.live else "—" }}</td>
+          <td>₹ {{ '%.2f'|format(it.value) }}</td>
+          <td>{{ '%.2f'|format(it.alloc_pct) }}%</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const ctx{{ loop.index }} = document.getElementById('chart-{{ loop.index }}');
+    new Chart(ctx{{ loop.index }}, {
+      type: 'doughnut',
+      data: {
+        labels: [{% for it in c["items"] %}"{{ it.stock }}",{% endfor %}],
+        datasets: [{
+          data: [{% for it in c["items"] %}{{ it.alloc_pct }},{% endfor %}],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: { legend: { labels: { color: '#e6e9ef' } } }
+      }
+    });
+  </script>
+  {% endfor %}
+</div>

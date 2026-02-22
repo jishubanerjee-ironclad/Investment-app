@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/static/style.css">
+<div class="box">
+<h2>My Portfolio</h2>
+
+<form method="post">
+<input name="stock" placeholder="Stock Name" required>
+<input name="qty" placeholder="Quantity" required>
+<input name="price" placeholder="Buy Price" required>
+<input type="date" name="date" required>
+<button>Add</button>
+</form>
+
+<table>
+<tr><th>Stock</th><th>Qty</th><th>Price</th><th>Date</th></tr>
+{% for h in holdings %}
+<tr>
+<td>{{h.stock}}</td>
+<td>{{h.qty}}</td>
+<td>{{h.price}}</td>
+<td>{{h.date}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<a href="/logout">Logout</a>
+</div>
